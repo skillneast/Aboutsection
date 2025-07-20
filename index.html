@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fahad Malik's Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- Google Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        /* --- CSS Variables --- */
+        :root {
+            /* Light Theme (Pastel, Coral, Modern) */
+            --bg-color-light: #FDE2E4;
+            --card-top-bg-light: rgba(255, 255, 255, 0.7);
+            --card-bottom-bg-light: rgba(255, 255, 255, 0.9);
+            --primary-text-light: #333;
+            --secondary-text-light: #555;
+            --accent-gradient-light: linear-gradient(45deg, #FF6B6B, #FFC145);
+            --outline-color-light: #FF6B6B;
+            --menu-bg-light: rgba(255, 255, 255, 0.6);
+
+            /* Dark Theme (Gen Z Neon/Vaporwave) */
+            --bg-color-dark: #10002b;
+            --card-top-bg-dark: rgba(22, 11, 48, 0.65);
+            --card-bottom-bg-dark: rgba(36, 11, 62, 0.85);
+            --primary-text-dark: #E6EDF3;
+            --secondary-text-dark: #bebebe;
+            --accent-gradient-dark: linear-gradient(45deg, #d900ff, #ff00a0, #00f5d4);
+            --outline-color-dark: #00f5d4;
+            --menu-bg-dark: rgba(22, 11, 48, 0.7);
+        }
+        
+        /* --- Animation Keyframes --- */
+        @keyframes card-enter {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes text-gradient-anim {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Base Styles --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--bg-color-dark); transition: background-color 0.5s ease; overflow: hidden; }
+        body.dark-theme { background-color: var(--bg-color-dark); }
+        
+        #particles-canvas { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
+
+        /* Profile Card and other elements CSS (No changes from previous version) */
+        .theme-switcher-container { position: fixed; top: 20px; left: 20px; z-index: 100; }
+        #theme-checkbox { display: none; }
+        .theme-switch-label { cursor: pointer; width: 60px; height: 30px; background: #555; display: flex; border-radius: 50px; align-items: center; justify-content: space-between; padding: 5px; position: relative; transform: scale(1.1); }
+        .theme-switch-ball { width: 22px; height: 22px; background-color: white; position: absolute; top: 4px; left: 4px; border-radius: 50%; transition: transform 0.3s ease; }
+        #theme-checkbox:checked + .theme-switch-label .theme-switch-ball { transform: translateX(30px); }
+        .fa-moon { color: #f1c40f; } .fa-sun { color: #f39c12; }
+        body.dark-theme .theme-switch-label { background: var(--card-bottom-bg-dark); border: 1px solid var(--outline-color-dark); }
+
+        .profile-card { position: relative; z-index: 2; width: 90%; max-width: 420px; background: var(--card-top-bg-light); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); overflow: hidden; transition: background 0.5s ease; border: 1px solid rgba(255,255,255,0.2); animation: card-enter 0.7s ease-out forwards; }
+        body.dark-theme .profile-card { background: var(--card-top-bg-dark); box-shadow: 0 10px 40px rgba(0, 245, 212, 0.1); border: 1px solid var(--outline-color-dark);}
+        
+        .card-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; position: relative; z-index: 5; }
+        .card-header a, .card-header i { font-size: 1.5rem; cursor: pointer; color: var(--primary-text-light); transition: transform 0.3s ease; text-decoration: none; }
+        body.dark-theme .card-header a, body.dark-theme .card-header i { color: var(--primary-text-dark); }
+        .card-header a:hover, .card-header i:hover { transform: scale(1.2); }
+
+        .profile-info { text-align: center; padding: 0 20px 20px; }
+        .profile-pic { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 5px solid rgba(255,255,255,0.8); margin-bottom: 15px; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .profile-pic:hover { transform: scale(1.08) rotate(3deg); }
+        body.dark-theme .profile-pic { border-color: var(--outline-color-dark); }
+        
+        .profile-name { font-size: 1.7rem; font-weight: 600; color: var(--primary-text-light); letter-spacing: 0.5px; }
+        body.dark-theme .profile-name {
+            background: var(--accent-gradient-dark);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 300% 300%;
+            animation: text-gradient-anim 5s ease infinite;
+        }
+        .profile-name .sparkle { color: #fff; font-size: 1.2rem; vertical-align: middle; }
+
+        .card-bottom-content { background: var(--card-bottom-bg-light); padding: 20px 25px; border-top-left-radius: 30px; border-top-right-radius: 30px; transition: background 0.5s ease; }
+        body.dark-theme .card-bottom-content { background: var(--card-bottom-bg-dark); }
+
+        .about-section { text-align: left; perspective: 1000px; margin-bottom: 25px; }
+        .about-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        h3 { font-weight: 600; color: var(--primary-text-light); transition: color 0.5s ease; }
+        body.dark-theme h3 { color: var(--primary-text-dark); }
+        #lang-toggle-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--outline-color-light); transition: all 0.3s ease; }
+        body.dark-theme #lang-toggle-btn { color: var(--outline-color-dark); }
+        #lang-toggle-btn:hover { transform: rotate(180deg); }
+        .about-section p { font-size: 0.9rem; line-height: 1.6; color: var(--secondary-text-light); }
+        body.dark-theme .about-section p { color: var(--secondary-text-dark); }
+
+        .action-buttons { display: flex; gap: 15px; }
+        .action-button { flex-grow: 1; padding: 12px; border-radius: 12px; border: none; font-size: 1rem; font-weight: 500; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; text-decoration: none; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .action-button:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        body.dark-theme .action-button:hover { box-shadow: 0 4px 20px rgba(0, 245, 212, 0.2); }
+        .action-button::after { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: rgba(255, 255, 255, 0.4); transform: rotate(45deg); transition: all 0.4s ease; opacity: 0; }
+        .action-button:hover::after { left: 100%; opacity: 1; transition: all 0.4s ease; }
+
+        .btn-follow { background: var(--accent-gradient-light); color: #fff; }
+        .btn-check-out { background-color: transparent; color: var(--outline-color-light); border: 2px solid var(--outline-color-light); }
+        body.dark-theme .btn-follow { background: var(--accent-gradient-dark); background-size: 200% 200%; animation: text-gradient-anim 5s ease infinite; color: var(--primary-text-dark); }
+        body.dark-theme .btn-check-out { color: var(--outline-color-dark); border-color: var(--outline-color-dark); }
+
+        .follow-container { position: relative; flex-grow: 1; display: flex; }
+        .social-icon-bubble { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: white; opacity: 0; z-index: -1; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; }
+        .follow-container.icons-active .social-icon-bubble { opacity: 1; z-index: 1; }
+        .follow-container.icons-active .icon-1 { transform: translate(-50%, -150%); }
+        .follow-container.icons-active .icon-2 { transform: translate(60%, -60%); }
+        .follow-container.icons-active .icon-3 { transform: translate(-160%, -60%); }
+        .icon-instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .icon-youtube { background: #FF0000; }
+        .icon-telegram { background: #2AABEE; }
+        
+        .nav-menu { position: absolute; top: 75px; left: 10px; width: 250px; background: var(--menu-bg-light); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 4; padding: 20px; border-radius: 15px; opacity: 0; transform-origin: top left; transition: opacity 0.3s ease, transform 0.3s ease; visibility: hidden; transform: scale(0.95); }
+        body.dark-theme .nav-menu { background: var(--menu-bg-dark); border: 1px solid var(--outline-color-dark); }
+        .nav-menu.active { opacity: 1; transform: scale(1); visibility: visible; }
+        .nav-menu ul { list-style: none; }
+        .nav-menu li a { display: flex; align-items: center; gap: 20px; padding: 12px; border-radius: 10px; text-decoration: none; color: var(--primary-text-light); font-size: 1.1rem; font-weight: 500; transition: background 0.3s ease, color 0.3s; }
+        body.dark-theme .nav-menu li a { color: var(--primary-text-dark); }
+        .nav-menu li a:hover { background: rgba(0, 0, 0, 0.1); color: var(--outline-color-light); }
+        body.dark-theme .nav-menu li a:hover { background: rgba(0, 245, 212, 0.1); color: var(--outline-color-dark); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--card-bottom-bg-light); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; width: 90%; max-width: 350px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); position: relative; transform: translateY(-20px); transition: transform 0.3s ease; border: 1px solid rgba(255,255,255,0.2); }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        body.dark-theme .modal-content { background: var(--card-bottom-bg-dark); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); border: 1px solid var(--outline-color-dark); }
+        .modal-close-btn { position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.5rem; color: var(--secondary-text-light); cursor: pointer; transition: color 0.3s ease; }
+        body.dark-theme .modal-close-btn { color: var(--secondary-text-dark); }
+        .modal-close-btn:hover { color: var(--outline-color-light); }
+        body.dark-theme .modal-close-btn:hover { color: var(--outline-color-dark); }
+        .modal-content h3 { text-align: center; margin-bottom: 25px; color: var(--primary-text-light); letter-spacing: 0.5px; }
+        body.dark-theme .modal-content h3 { color: var(--primary-text-dark); }
+        .modal-buttons { display: flex; flex-direction: column; gap: 15px; }
+        .modal-buttons .action-button { padding: 15px; background: var(--accent-gradient-light); color: #fff; border: none; font-size: 1.1rem; text-decoration: none; }
+        body.dark-theme .modal-buttons .action-button { background: var(--accent-gradient-dark); color: var(--primary-text-dark); }
+    </style>
+</head>
+<body class="dark-theme">
+
+    <canvas id="particles-canvas"></canvas>
+
+    <div class="theme-switcher-container">
+        <input type="checkbox" id="theme-checkbox" checked>
+        <label for="theme-checkbox" class="theme-switch-label">
+            <i class="fas fa-sun"></i><i class="fas fa-moon"></i><div class="theme-switch-ball"></div>
+        </label>
+    </div>
+
+    <div class="profile-card">
+        <header class="card-header">
+            <i class="fas fa-bars" id="menu-toggle"></i>
+            <a href="mailto:skillneast@gmail.com"><i class="fas fa-envelope"></i></a>
+        </header>
+
+        <div class="nav-menu">
+            <ul>
+                <li><a href="https://t.me/skillneast" target="_blank"><i class="fab fa-telegram"></i> Telegram</a></li>
+                <li><a href="https://youtube.com/@skillneast" target="_blank"><i class="fab fa-youtube"></i> YouTube</a></li>
+                <li><a href="https://www.instagram.com/skillneast?igsh=cjJ1cTFzNTNnN3pl" target="_blank"><i class="fab fa-instagram"></i> Instagram</a></li>
+            </ul>
+        </div>
+        
+        <div class="profile-info">
+            <img src="https://i.postimg.cc/dQr43k9r/file-00000000fde061f7b24dbaddd2b9ac88.png" alt="Profile Picture" class="profile-pic">
+            <h2 class="profile-name">
+                <span class="sparkle">✧</span> Fahad Malik <span class="sparkle">✧</span>
+            </h2>
+        </div>
+        
+        <div class="card-bottom-content">
+            <div class="about-section">
+                <div class="about-header">
+                     <h3>About</h3><button id="lang-toggle-btn" title="Translate"><i class="fas fa-sync-alt"></i></button>
+                </div>
+                <p id="about-text" data-hinglish="I'm 16 years old and currently learning in Class 11 with PCM (Physics, Chemistry, Maths) stream. Skills abhi kuch nahi hain, but har roz kuch naya seekh raha hoon! Learning is my journey. 😊" data-english="I am 16 years old and currently in 11th grade, studying in the PCM (Physics, Chemistry, Maths) stream. I don't have many skills right now, but I am learning something new every day! Learning is my journey. 😊"></p>
+            </div>
+            
+            <div class="action-buttons">
+                <div class="follow-container">
+                    <button class="action-button btn-follow">Follow</button>
+                    <a href="https://www.instagram.com/skillneast?igsh=cjJ1cTFzNTNnN3pl" target="_blank" class="social-icon-bubble icon-1 icon-instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://youtube.com/@skillneast" target="_blank" class="social-icon-bubble icon-2 icon-youtube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://t.me/skillneast" target="_blank" class="social-icon-bubble icon-3 icon-telegram"><i class="fab fa-telegram"></i></a>
+                </div>
+                <button class="action-button btn-check-out" id="check-out-btn">Check Out</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="check-out-modal">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="modal-close-btn"><i class="fas fa-times"></i></button>
+            <h3>My Projects</h3>
+            <div class="modal-buttons">
+                <a href="#" class="action-button"><i class="fas fa-lightbulb"></i> Skillneast</a>
+                <a href="#" class="action-button"><i class="fas fa-code"></i> Coderneast</a>
+                <a href="#" class="action-button"><i class="fas fa-file-pdf"></i> Pdfneast</a>
+                <a href="#" class="action-button"><i class="fas fa-graduation-cap"></i> Studyneast</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const followContainer = document.querySelector('.follow-container');
+            const followBtn = document.querySelector('.btn-follow');
+            const menuToggle = document.getElementById('menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            const themeCheckbox = document.getElementById('theme-checkbox');
+            const aboutText = document.getElementById('about-text');
+            const langBtn = document.getElementById('lang-toggle-btn');
+            const checkOutBtn = document.getElementById('check-out-btn');
+            const checkOutModal = document.getElementById('check-out-modal');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+
+            followBtn.addEventListener('click', () => {
+                const isActive = followContainer.classList.toggle('icons-active');
+                followBtn.innerHTML = isActive ? '<i class="fas fa-times"></i>' : 'Follow';
+            });
+            menuToggle.addEventListener('click', (e) => { e.stopPropagation(); navMenu.classList.toggle('active'); });
+            document.addEventListener('click', (e) => { if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) { navMenu.classList.remove('active'); } });
+            const setTheme = (isDark) => { document.body.classList.toggle('dark-theme', isDark); themeCheckbox.checked = isDark; };
+            setTheme(document.body.classList.contains('dark-theme')); 
+            themeCheckbox.addEventListener('change', () => setTheme(themeCheckbox.checked));
+            let currentLang = 'hinglish';
+            aboutText.textContent = aboutText.dataset.hinglish; 
+            langBtn.addEventListener('click', () => {
+                aboutText.style.transition = 'opacity 0.2s ease';
+                aboutText.style.opacity = '0';
+                setTimeout(() => {
+                    currentLang = (currentLang === 'hinglish') ? 'english' : 'hinglish';
+                    aboutText.textContent = aboutText.dataset[currentLang];
+                    aboutText.style.opacity = '1';
+                }, 200);
+            });
+            checkOutBtn.addEventListener('click', () => checkOutModal.classList.add('active'));
+            modalCloseBtn.addEventListener('click', () => checkOutModal.classList.remove('active'));
+            checkOutModal.addEventListener('click', (e) => { if (e.target === checkOutModal) { checkOutModal.classList.remove('active'); } });
+
+            // --- HIGH QUALITY PARTICLE ENGINE ---
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            let particlesArray;
+            let frame = 0;
+
+            function Particle(x, y, dirX, dirY, size) { 
+                this.x = x; 
+                this.y = y; 
+                this.dirX = dirX;
+                this.dirY = dirY;
+                this.size = size;
+                this.pushX = 0;
+                this.pushY = 0;
+                this.friction = 0.95;
+                this.opacityOffset = Math.random() * Math.PI * 2;
+                this.pulseSpeed = 0.015 + Math.random() * 0.02;
+            }
+
+            Particle.prototype.draw = function() {
+                const isDark = document.body.classList.contains('dark-theme');
+                const pulse = (Math.sin(frame * this.pulseSpeed + this.opacityOffset) + 1) / 2 * 0.5 + 0.4;
+                const particleColor = isDark ? `rgba(0, 245, 212, ${pulse})` : `rgba(255, 107, 107, ${pulse})`;
+
+                ctx.beginPath(); 
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); 
+                ctx.fillStyle = particleColor;
+                ctx.fill(); 
+            }
+
+            Particle.prototype.update = function() {
+                this.pushX *= this.friction;
+                this.pushY *= this.friction;
+                this.x += this.dirX + this.pushX;
+                this.y += this.dirY + this.pushY;
+                if (this.x + this.size > canvas.width || this.x - this.size < 0) { this.dirX = -this.dirX; }
+                if (this.y + this.size > canvas.height || this.y - this.size < 0) { this.dirY = -this.dirY; }
+                this.draw();
+            }
+
+            function initParticles() {
+                particlesArray = [];
+                // *** ZYADA PARTICLES & HIGH QUALITY ***
+                let numberOfParticles = (canvas.height * canvas.width) / 5500;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 3.5) + 1; // Slightly larger particles
+                    let x = (Math.random() * (canvas.width - size * 2) + size);
+                    let y = (Math.random() * (canvas.height - size * 2) + size);
+                    let dirX = (Math.random() * 0.8) - 0.4;
+                    let dirY = (Math.random() * 0.8) - 0.4;
+                    particlesArray.push(new Particle(x, y, dirX, dirY, size));
+                }
+            }
+
+            function connectParticles() {
+                for (let a = 0; a < particlesArray.length; a++) {
+                    for (let b = a; b < particlesArray.length; b++) {
+                        let dist = Math.sqrt(((particlesArray[a].x - particlesArray[b].x) ** 2) + ((particlesArray[a].y - particlesArray[b].y) ** 2));
+                        const maxConnectDistance = 100;
+                        if (dist < maxConnectDistance) {
+                            let opacity = 1 - (dist / maxConnectDistance);
+                            let isDark = document.body.classList.contains('dark-theme');
+                            let color = isDark ? `rgba(0, 245, 212, ${opacity * 0.5})` : `rgba(255, 107, 107, ${opacity * 0.5})`;
+                            ctx.strokeStyle = color; 
+                            ctx.lineWidth = 0.3; 
+                            ctx.beginPath();
+                            ctx.moveTo(particlesArray[a].x, particlesArray[a].y); 
+                            ctx.lineTo(particlesArray[b].x, particlesArray[b].y); 
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            function animateParticles() {
+                requestAnimationFrame(animateParticles);
+                const isDark = document.body.classList.contains('dark-theme');
+                // *** SMOOTHER TRAILS ***
+                const fadeColor = isDark ? 'rgba(16, 0, 43, 0.12)' : 'rgba(253, 226, 228, 0.12)';
+                ctx.fillStyle = fadeColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                }
+                connectParticles();
+                frame++;
+            }
+            
+            canvas.addEventListener('click', (event) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = event.clientX - rect.left;
+                const mouseY = event.clientY - rect.top;
+                const clickRadius = 150;
+                const pushStrength = 5;
+                for (let i = 0; i < particlesArray.length; i++) {
+                    const p = particlesArray[i];
+                    const dist = Math.sqrt(((mouseX - p.x) ** 2) + ((mouseY - p.y) ** 2));
+                    if (dist < clickRadius) {
+                        const angle = Math.atan2(p.y - mouseY, p.x - mouseX);
+                        const force = (clickRadius - dist) / clickRadius;
+                        p.pushX += Math.cos(angle) * force * pushStrength;
+                        p.pushY += Math.sin(angle) * force * pushStrength;
+                    }
+                }
+            });
+
+            window.addEventListener('resize', () => { 
+                canvas.width = window.innerWidth; 
+                canvas.height = window.innerHeight; 
+                initParticles(); 
+            });
+
+            initParticles(); 
+            animateParticles(); 
+            setTheme(document.body.classList.contains('dark-theme')); 
+        });
+    </script>
+</body>
+</html>
