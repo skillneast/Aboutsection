@@ -46,12 +46,17 @@
 
         /* --- Base Styles --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--bg-color-dark); transition: background-color 0.5s ease; overflow: hidden; }
+        
+        /* MODIFIED: Removed flex properties and overflow:hidden to allow scrolling */
+        body { 
+            background-color: var(--bg-color-dark); 
+            transition: background-color 0.5s ease; 
+        }
         body.dark-theme { background-color: var(--bg-color-dark); }
         
         #particles-canvas { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: 0; }
 
-        /* Profile Card and other elements CSS (No changes from previous version) */
+        /* Theme Switcher */
         .theme-switcher-container { position: fixed; top: 20px; left: 20px; z-index: 100; }
         #theme-checkbox { display: none; }
         .theme-switch-label { cursor: pointer; width: 60px; height: 30px; background: #555; display: flex; border-radius: 50px; align-items: center; justify-content: space-between; padding: 5px; position: relative; transform: scale(1.1); }
@@ -60,7 +65,24 @@
         .fa-moon { color: #f1c40f; } .fa-sun { color: #f39c12; }
         body.dark-theme .theme-switch-label { background: var(--card-bottom-bg-dark); border: 1px solid var(--outline-color-dark); }
 
-        .profile-card { position: relative; z-index: 2; width: 90%; max-width: 420px; background: var(--card-top-bg-light); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-radius: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); overflow: hidden; transition: background 0.5s ease; border: 1px solid rgba(255,255,255,0.2); animation: card-enter 0.7s ease-out forwards; }
+        /* Profile Card */
+        /* MODIFIED: Card size chota kar diya aur margin set kar diya scrolling ke liye */
+        .profile-card { 
+            position: relative; 
+            z-index: 2; 
+            width: 90%; 
+            max-width: 380px; /* Card size chota ho gaya */
+            margin: 40px auto; /* Card ko center mein rakhega aur upar neeche space dega */
+            background: var(--card-top-bg-light); 
+            backdrop-filter: blur(14px); 
+            -webkit-backdrop-filter: blur(14px); 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); 
+            overflow: hidden; 
+            transition: background 0.5s ease; 
+            border: 1px solid rgba(255,255,255,0.2); 
+            animation: card-enter 0.7s ease-out forwards; 
+        }
         body.dark-theme .profile-card { background: var(--card-top-bg-dark); box-shadow: 0 10px 40px rgba(0, 245, 212, 0.1); border: 1px solid var(--outline-color-dark);}
         
         .card-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 25px; position: relative; z-index: 5; }
@@ -289,10 +311,9 @@
 
             function initParticles() {
                 particlesArray = [];
-                // *** ZYADA PARTICLES & HIGH QUALITY ***
                 let numberOfParticles = (canvas.height * canvas.width) / 5500;
                 for (let i = 0; i < numberOfParticles; i++) {
-                    let size = (Math.random() * 3.5) + 1; // Slightly larger particles
+                    let size = (Math.random() * 3.5) + 1;
                     let x = (Math.random() * (canvas.width - size * 2) + size);
                     let y = (Math.random() * (canvas.height - size * 2) + size);
                     let dirX = (Math.random() * 0.8) - 0.4;
@@ -324,7 +345,6 @@
             function animateParticles() {
                 requestAnimationFrame(animateParticles);
                 const isDark = document.body.classList.contains('dark-theme');
-                // *** SMOOTHER TRAILS ***
                 const fadeColor = isDark ? 'rgba(16, 0, 43, 0.12)' : 'rgba(253, 226, 228, 0.12)';
                 ctx.fillStyle = fadeColor;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
